@@ -35,6 +35,17 @@ Module Module1
                     TestProject.SetValue(strSetting, strValue)
                 Case 3
                     'Enter code for menu option 3
+                    Dim strKey, strAns As String
+                    Console.WriteLine("Enter the key under HKEY_CURRENT_USER to delete")
+                    strKey = Console.ReadLine()
+                    Console.WriteLine("Do you really men to delete: " & strKey & " and its settings?")
+                    strAns = Console.ReadLine()
+                    If strAns.ToUpper = "YES" Or strAns.ToUpper = "Y" Then
+                        Registry.CurrentUser.DeleteSubKeyTree(strKey)
+                        Console.WriteLine("Key " & strKey & " deleted")
+                    Else
+                        Console.WriteLine("Deletion not performed")
+                    End If
                 Case 4
                     Dim strKey, strSetting, strAns As String
                     Console.WriteLine("Enter the key")
@@ -61,7 +72,24 @@ Module Module1
                     Console.WriteLine("Value of " & TestProject.ToString & "\" & strSetting & " is: " & TestProject.GetValue(strSetting).ToString)
                 Case 6
                     'Enter code here for menu option 6
-                    
+                    Dim strKey As String
+                    Dim cHive As Char
+                    Console.WriteLine("Select the Hive you want to start with: ")
+                    Console.WriteLine("Enter 'L' for HKEY_LOCAL_MACHINE or 'C' for HKEY_CURRENT_USER")
+                    cHive = Console.ReadLine()
+                    Console.WriteLine("Enter the key")
+                    strKey = Console.ReadLine()
+                    If UCase(cHive) = "L" Then
+                        TestProject = Registry.LocalMachine.OpenSubKey(strKey)
+                        Console.WriteLine("HKEY_LOCAL_MACHINE selected")
+                    Else
+                        TestProject = Registry.CurrentUser.OpenSubKey(strKey)
+                        Console.WriteLine("HKEY_CURRENT_USER selected")
+                    End If
+                    For Each subKeyName As String In TestProject.GetSubKeyNames()
+                        Console.WriteLine(subKeyName)
+                    Next
+                    TestProject.Close()
                 Case 9
                     Console.WriteLine("Good bye!")
                 Case Else
